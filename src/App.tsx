@@ -56,13 +56,35 @@ function App() {
         tasksForToDoList = tasks.filter(el => el.isDone === false)
     }
 
+    /*function changeStatus(taskId: string) {
+        let task = tasks.find((el)=>{
+            if (el.isDone === taskId) {
+                return true
+            }
+            else {
+                return false
+            }
+        })
+    }*/
+    function changeStatus(taskId: string, isDone: boolean) {
+        let task = tasks.find(el => el.id === taskId);
+        if (task){
+            task.isDone = isDone
+        }
+        setTasks([...tasks]);
+    }
+
+
     return (
         <div className="App">
             <ToDoList title={'What to learn?'}
                       tasks1={tasksForToDoList}
                       removeTask={removeTask}
                       changeFilter={changeFilter}
-                      adTask={addTask}/>
+                      adTask={addTask}
+                      changeTaskStatus={changeStatus}
+                      filter={filter}/>
+
             {/*<ToDoList title={"Movies"} task={tasks2} />*/}
 
         </div>
