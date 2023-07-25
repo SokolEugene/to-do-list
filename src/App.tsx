@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {ToDoList} from './Components/ToDoList';
 import {v1} from 'uuid';
+import {AddItemForm} from './Components/AddItemForm';
 
 //useState  - функция которая принимает в себя данные(state) и функцию(setState) которое способна изменить эти данные и возвращает массив
 
@@ -19,7 +20,7 @@ function App() {
     let todoListID2 = v1()
 
     let [todoLists, setTodoLists] = useState<Array<TodoListType>>([
-        {tdlID: todoListID1, title: 'What to learn', filter: 'Active'},
+        {tdlID: todoListID1, title: 'What to learn', filter: 'All'},
         {tdlID: todoListID2, title: 'What to buy', filter: 'All'}
     ]);
     let removeTDL  = (todolistID: string) => {
@@ -78,12 +79,18 @@ function App() {
         setTasks({...tasks,[todolistID]: tasks[todolistID].map(el => el.taskID === taskID ? {...el, isDone: isDone} : el)
         })
     }
-
+    function addToDoList(title: string) {
+        let todoList: TodoListType = {
+            tdlID: v1(), title: title, filter: 'All'
+        }
+        setTodoLists([todoList, ...todoLists])
+        setTasks({...tasks, [todoList.tdlID]:[]})
+    }
 
 
     return (
         <div className="App">
-
+<AddItemForm addItem={addToDoList}/>
             {todoLists.map(el => {
                 let tasksForToDoList = tasks[el.tdlID];
                 if (el.filter === 'Active') {
@@ -102,7 +109,7 @@ function App() {
                               addTask={addTask}
                               changeTaskStatus={changeStatus}
                               filter={el.filter}
-                                removeTDL={removeTDL}/>)
+                              removeTDL={removeTDL}/>)
             })}
         </div>
     )
