@@ -19,7 +19,7 @@ export function AddItemForm(props: AddItemFormProps) {
         }
     }
     const addTask = () => {
-        debugger
+
         if (newTaskTitle.trim() !== '') {
             props.addItem(newTaskTitle.trim())
             setNewTaskTitle('')
