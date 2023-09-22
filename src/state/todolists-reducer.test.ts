@@ -40,8 +40,8 @@ test('correct todolist should be added', () => {
 
 
     expect(endState.length).toBe(3)
-    expect(endState[2].title).toBe(newTodolistTitle)
-    expect(endState[2].filter).toBe('All')
+    expect(endState[0].title).toBe(newTodolistTitle)
+    expect(endState[0].filter).toBe('All')
 })
 test('correct todolist should change its name', () => {
     let todoListID1 = v1()

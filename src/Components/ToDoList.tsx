@@ -18,7 +18,7 @@ type PropsToDoListType = {
     removeTask: (todolistID: string, id: string) => void
     changeFilter: (todolistID: string, value: FilterValuesType) => void
     addTask: (todolistID: string, title: string) => void
-    changeTaskStatus: (todolistID: string, taskID: string, isDone: boolean) => void
+    changeTaskStatus: (taskID: string, isDone: boolean, todolistID: string ) => void
     changeTaskTitle: (todolistID: string, taskID: string, NewTitle: string) => void
     filter: FilterValuesType
     removeTDL: (todolistID: string) => void
@@ -83,7 +83,7 @@ export function ToDoList(props: PropsToDoListType) {
             <List>
                 {props.tasks.map(el => {
                     const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
-                        props.changeTaskStatus(props.tdlID, el.taskID, event.currentTarget.checked)
+                        props.changeTaskStatus(el.taskID, event.currentTarget.checked, props.tdlID,)
                     }
                     const onChangeTitleHandler = (newValue: string) => {
                         props.changeTaskTitle(props.tdlID, el.taskID, newValue)
