@@ -1,9 +1,12 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValuesType} from '../App';
+import {FilterValuesType} from '../AppWithRedux';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {IconButton, Button, ListItem, List, Checkbox} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootState} from "../state/store";
 
 export type PropsTasksType = {
     taskID: string
@@ -14,40 +17,54 @@ export type PropsTasksType = {
 type PropsToDoListType = {
     tdlID: string
     title: string
-    tasks: Array<PropsTasksType> //PropsTasksType[]
-    removeTask: (todolistID: string, id: string) => void
-    changeFilter: (todolistID: string, value: FilterValuesType) => void
-    addTask: (todolistID: string, title: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean, todolistID: string ) => void
-    changeTaskTitle: (todolistID: string, taskID: string, NewTitle: string) => void
     filter: FilterValuesType
     removeTDL: (todolistID: string) => void
     ChangeToDoListTitle: (todolistID: string, newTitle: string) => void
+    changeFilter: (tdlID: string, filter: FilterValuesType) => void
 }
 
 export function ToDoList(props: PropsToDoListType) {
+debugger
+    const tasks = useSelector<AppRootState, Array<PropsTasksType>>(state => state.tasks[props.tdlID])
+    const dispatch = useDispatch();
 
-    /*const [newTaskTitle, setNewTaskTitle] = useState('');*/
-    /*const [error, setError] = useState<string | null>(null);*/
-    /* const addTask = () => {
-         if (newTaskTitle.trim() !== '') {
-             props.addTask(props.tdlID, newTaskTitle.trim())
-             setNewTaskTitle('')
-         } else {
-             setError('Field is required')
-         }
-     }*/
-    /*const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(event.currentTarget.value)
+/*    function removeTask(id: string, todolistID: string,) {
+        /!*const action = removeTaskAC(id, todolistID);
+         dispatchToTasksReducer(action)*!/
+        dispatch(removeTaskAC(id, todolistID))
+        // console.log(todolistID, id)
+        /!*let tasks = tasks[todolistID];
+        let filteredTasks = tasks.filter(el => el.id !== id)
+        tasksObj[todolistID] = filteredTasks
+        // пропусти те элементы id которых !== переданному
+        setTasks({...tasksObj});*!/
+        /!*setTasks({...tasks, [todolistID]: tasks[todolistID].filter(el => el.taskID !== id)})*!/
+    }
+    /!*function addTask(todolistID: string, title: string) {
+        dispatch(addTaskAC(todolistID, title))
+    }*!/
+    function changeStatus(taskID: string, isDone: boolean, todolistID: string ) {
+        dispatch(changeTaskStatusAC(taskID, isDone, todolistID))
+        /!* let tasks = tasksObj[todolistID]
+         let task =  tasks.find(el => el.id === taskId);
+           if (task) {
+               task.isDone = isDone
+               setTasks({...tasksObj});
+           }*!/
+        /!* setTasks({
+             ...tasks, [todolistID]: tasks[todolistID].map(el => el.taskID === taskID ? {...el, isDone: isDone} : el)
+         })*!/
+    }
+    function changeTitle(todolistID: string, taskID: string, newTitle: string) {
+        dispatch(changeTaskTitleAC(todolistID, taskID, newTitle));
+        /!*const action = changeTaskTitleAC(todolistID, taskID, newTitle);
+        dispatchToTasksReducer(action);*!/
+        /!* setTasks({
+             ...tasks, [todolistID]: tasks[todolistID].map(el => el.taskID === taskID ? {...el, title: newTitle} : el)
+         })*!/
     }*/
-    /*const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
-        if (event.key === 'Enter') {
-            addTask()
-            /!*props.addTask(newTaskTitle, props.id);
-            setNewTaskTitle('')*!/
-        }
-    }*/
+
+
     const onAllClickHandler = () => props.changeFilter(props.tdlID, 'All')
     const onActiveClickHandler = () => props.changeFilter(props.tdlID, 'Active')
     const onCompletedClickHandler = () => props.changeFilter(props.tdlID, 'Completed')
@@ -58,7 +75,16 @@ export function ToDoList(props: PropsToDoListType) {
         props.ChangeToDoListTitle(props.tdlID, newTitle);
     }
     const addTask = (title: string) => {
-        props.addTask(props.tdlID, title)
+        dispatch(addTaskAC(props.tdlID, title))
+       /* props.addTask(props.tdlID, title)*/
+    }
+
+    let tasksForToDoList = tasks;
+    if (props.filter === 'Active') {
+        tasksForToDoList = tasks.filter(t => !t.isDone)
+    }
+    if (props.filter === 'Completed') {
+        tasksForToDoList = tasks.filter(t => t.isDone)
     }
     return (
         <div>
@@ -70,6 +96,9 @@ export function ToDoList(props: PropsToDoListType) {
                 </IconButton>
                 {/*  <button onClick={removeTDL}>X</button>*/}
             </h3>
+            {/*<AddItemForm addItem={(title)=>{
+                dispatch(addTaskAC(props.tdlID, title))
+            }}/>*/}
             <AddItemForm addItem={addTask}/>
             {/*<div>
                 <input value={newTaskTitle}
@@ -81,16 +110,18 @@ export function ToDoList(props: PropsToDoListType) {
                 {error && <div className={'error-message'}>{error}</div>}
             </div>*/}
             <List>
-                {props.tasks.map(el => {
+                {tasksForToDoList.map(el => {
                     const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
-                        props.changeTaskStatus(el.taskID, event.currentTarget.checked, props.tdlID,)
+                       /* props.changeTaskStatus(el.taskID, event.currentTarget.checked, props.tdlID,)*/
+                        dispatch(changeTaskStatusAC(el.taskID, event.currentTarget.checked, props.tdlID))
                     }
-                    const onChangeTitleHandler = (newValue: string) => {
-                        props.changeTaskTitle(props.tdlID, el.taskID, newValue)
+                    const onChangeTitleHandler = (newValue: string,) => {
+                        //props.changeTaskTitle(props.tdlID, el.taskID, newValue)
+                        dispatch(changeTaskTitleAC(props.tdlID, el.taskID, newValue));
                     }
                     const OnRemoveHandler = () => {
-                        debugger
-                        props.removeTask(el.taskID, props.tdlID)
+                        dispatch(removeTaskAC(el.taskID, props.tdlID))
+                        /*props.removeTask(el.taskID, props.tdlID)*/
                     }
                     return (<ListItem
                         sx={{display:"flex", justifyContent: "space-between", p:0}}
