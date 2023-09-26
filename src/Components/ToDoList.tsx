@@ -28,42 +28,6 @@ debugger
     const tasks = useSelector<AppRootState, Array<PropsTasksType>>(state => state.tasks[props.tdlID])
     const dispatch = useDispatch();
 
-/*    function removeTask(id: string, todolistID: string,) {
-        /!*const action = removeTaskAC(id, todolistID);
-         dispatchToTasksReducer(action)*!/
-        dispatch(removeTaskAC(id, todolistID))
-        // console.log(todolistID, id)
-        /!*let tasks = tasks[todolistID];
-        let filteredTasks = tasks.filter(el => el.id !== id)
-        tasksObj[todolistID] = filteredTasks
-        // пропусти те элементы id которых !== переданному
-        setTasks({...tasksObj});*!/
-        /!*setTasks({...tasks, [todolistID]: tasks[todolistID].filter(el => el.taskID !== id)})*!/
-    }
-    /!*function addTask(todolistID: string, title: string) {
-        dispatch(addTaskAC(todolistID, title))
-    }*!/
-    function changeStatus(taskID: string, isDone: boolean, todolistID: string ) {
-        dispatch(changeTaskStatusAC(taskID, isDone, todolistID))
-        /!* let tasks = tasksObj[todolistID]
-         let task =  tasks.find(el => el.id === taskId);
-           if (task) {
-               task.isDone = isDone
-               setTasks({...tasksObj});
-           }*!/
-        /!* setTasks({
-             ...tasks, [todolistID]: tasks[todolistID].map(el => el.taskID === taskID ? {...el, isDone: isDone} : el)
-         })*!/
-    }
-    function changeTitle(todolistID: string, taskID: string, newTitle: string) {
-        dispatch(changeTaskTitleAC(todolistID, taskID, newTitle));
-        /!*const action = changeTaskTitleAC(todolistID, taskID, newTitle);
-        dispatchToTasksReducer(action);*!/
-        /!* setTasks({
-             ...tasks, [todolistID]: tasks[todolistID].map(el => el.taskID === taskID ? {...el, title: newTitle} : el)
-         })*!/
-    }*/
-
 
     const onAllClickHandler = () => props.changeFilter(props.tdlID, 'All')
     const onActiveClickHandler = () => props.changeFilter(props.tdlID, 'Active')
@@ -90,25 +54,11 @@ debugger
         <div>
             <h3>
                 <EditableSpan title={props.title} onChange={ChangeToDoListTitle}/>
-                {/*{props.title}*/}
                 <IconButton onClick={removeTDL} size={'large'} aria-label="delete">
                     <DeleteIcon/>
                 </IconButton>
-                {/*  <button onClick={removeTDL}>X</button>*/}
             </h3>
-            {/*<AddItemForm addItem={(title)=>{
-                dispatch(addTaskAC(props.tdlID, title))
-            }}/>*/}
             <AddItemForm addItem={addTask}/>
-            {/*<div>
-                <input value={newTaskTitle}
-                       onChange={onChangeHandler}
-                       onKeyDown={onKeyDownHandler}
-                       className={error ? "error" : ""}
-                />
-                <button onClick={addTask}>+</button>
-                {error && <div className={'error-message'}>{error}</div>}
-            </div>*/}
             <List>
                 {tasksForToDoList.map(el => {
                     const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -134,7 +84,6 @@ debugger
                         <IconButton onClick={OnRemoveHandler} aria-label="delete" size="small">
                             <DeleteIcon/>
                         </IconButton>
-                        {/*<button onClick={OnRemoveHandler}>X</button>*/}
                     </ListItem>)
                 })}
             </List>
