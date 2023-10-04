@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {PropsTasksType, ToDoList} from './Components/ToDoList';
 import {AddItemForm} from './Components/AddItemForm';
 import {AppBar, IconButton, Button, Toolbar, Container, Grid, Paper} from '@mui/material';
@@ -30,38 +30,27 @@ export type TasksStateType = {
 }
 
 function AppWithRedux() {
-
+    console.log("App")
 
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootState,TodoListType[] >(state => state.todolist)
 
 
 
-    let removeTDL = (todolistID: string) => {
+    const removeTDL = useCallback((todolistID: string) => {
         const action = removeTodolistAC(todolistID);
-        dispatch(action);
-    }
-    function addToDoList(title: string) {
-        const action = addTodolistAC(title)
-        dispatch(action)
-       /* let todoList: TodoListType = {
-            tdlID: v1(), title: title, filter: 'All'
-        }
-        setTodoLists([todoList, ...todoLists])
-        setTasks({...tasks, [todoList.tdlID]: []})*/
-    }
-    let ChangeToDoListTitle = (todolistID: string, newTitle: string) => {
+        dispatch(action)}, []);
+
+    const addToDoList = useCallback((title: string)=> {
+        //const action = addTodolistAC(title)
+        dispatch(addTodolistAC(title))
+    }, [])
+    const ChangeToDoListTitle = useCallback((todolistID: string, newTitle: string) => {
         dispatch(changeTodolistTitleAC(todolistID, newTitle))
-    }
-    function changeFilter(todolistID: string, value: FilterValuesType) {
+    }, [])
+    const changeFilter = useCallback((todolistID: string, value: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(todolistID, value))
-        /*let todoList = todoLists.find(el => el.id === todolistID);
-        if (todoList) {
-            todoList.filter = value;
-            setTodoLists([...todoLists])
-        }*/
-       // setTodoLists(todoLists.map(el => el.tdlID === todolistID ? {...el, filter: value} : el))
-    }
+    }, [])
 
     return (
         <div className="App">
@@ -95,11 +84,7 @@ function AppWithRedux() {
                                               tdlID={el.tdlID}
                                               title={el.title}
                                               //tasks={el.tasksForToDoList}
-
                                               changeFilter={changeFilter}
-
-
-
                                               filter={el.filter}
                                               removeTDL={removeTDL}
                                               ChangeToDoListTitle={ChangeToDoListTitle}/>
