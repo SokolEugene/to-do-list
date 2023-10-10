@@ -28,14 +28,14 @@ export const ToDoList = React.memo((props: PropsToDoListType) => {
     const tasks = useSelector<AppRootState, Array<PropsTasksType>>(state => state.tasks[props.tdlID])
     const dispatch = useDispatch();
 
-    const removeTDL = useCallback(() => props.removeTDL(props.tdlID), [props.removeTDL, props.tdlID]);
+    const removeTDL = useCallback(() => props.removeTDL(props.tdlID), [props.removeTDL, props.tdlID, dispatch]);
     const addTask = useCallback((title: string) => dispatch(addTaskAC(props.tdlID, title)), [props.tdlID, dispatch]);
-    const ChangeToDoListTitle = useCallback((newTitle: string) => props.ChangeToDoListTitle(props.tdlID, newTitle), [props.ChangeToDoListTitle, props.tdlID]);
+    const ChangeToDoListTitle = useCallback((newTitle: string) => props.ChangeToDoListTitle(props.tdlID, newTitle), [props.ChangeToDoListTitle, props.tdlID,  dispatch]);
 
 
-    const onAllClickHandler = useCallback(() => props.changeFilter(props.tdlID, 'All'), [props.changeFilter, props.tdlID]);
+    const onAllClickHandler = useCallback(() => props.changeFilter(props.tdlID, 'All'), [props.changeFilter, props.tdlID, dispatch]);
     const onActiveClickHandler = useCallback(() => props.changeFilter(props.tdlID, 'Active'), [props.changeFilter, props.tdlID]);
-    const onCompletedClickHandler = useCallback(() => props.changeFilter(props.tdlID, 'Completed'), [props.changeFilter, props.tdlID]);
+    const onCompletedClickHandler = useCallback(() => props.changeFilter(props.tdlID, 'Completed'), [props.changeFilter, props.tdlID, dispatch]);
 
 
     let tasksForToDoList = tasks;
@@ -55,7 +55,7 @@ export const ToDoList = React.memo((props: PropsToDoListType) => {
             </h3>
             <AddItemForm addItem={addTask}/>
             <List>
-                {tasksForToDoList.map(el => <Task tasks={el}
+                {tasksForToDoList.map(el => <Task task={el}
                     // filter={props.filter}
                                                   tdlID={props.tdlID}
                                                   key={el.taskID}/>)}
