@@ -1,6 +1,7 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
 import {todolistsReducer} from "./todolists-reducer";
 import {tasksReducer} from "./tasks-reducer";
+import thunk from "redux-thunk";
 // import {TodoListType, TasksStateType} from "../AppWithRedux";
 
 /*type AppRootState = {
@@ -8,17 +9,18 @@ import {tasksReducer} from "./tasks-reducer";
     tasks: TasksStateType
 }*/
 
-export type AppRootState = ReturnType<typeof rootReducer> //способ автоматической типизации
+
 
 const rootReducer = combineReducers({
-    todolist: todolistsReducer,
-    tasks: tasksReducer
+    tasks: tasksReducer,
+    todolists: todolistsReducer
 })
+// непосредственно создаём store
+export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
+// определить автоматически тип всего объекта состояния
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
-export const store = createStore(rootReducer);
-
-
-
+// а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore
-window.store = store
+window.store = store;
 
