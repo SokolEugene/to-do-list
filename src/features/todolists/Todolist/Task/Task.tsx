@@ -1,15 +1,15 @@
 import React, {ChangeEvent, useCallback} from 'react';
 import {Checkbox, IconButton, ListItem} from "@mui/material";
-import {EditableSpan} from "./EditableSpan";
+import {EditableSpan} from "../../../../components/editableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskStatuses, TaskType} from "../api/todolists-api";
+import {TaskStatuses, TaskType} from "../../../../api/todolists-api";
 
 
 export type PropsTasksType = {
     task: TaskType
     tdlID: string
-    changeTaskStatus: (id: string, status: TaskStatuses, todolistId: string) => void
-   changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
+    changeTaskStatus: (todolistId: string, taskId: string, status: TaskStatuses) => void
+    changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
     removeTask: (taskId: string, todolistId: string) => void
 }
 /*export type PropsTasksType = {
@@ -29,15 +29,15 @@ export type PropsTasksType = {
 export const Task = React.memo((props: PropsTasksType) => {
 
     const onChangeStatusHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        props.changeTaskStatus(props.task.id, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New, props.tdlID,)
-       // dispatch(changeTaskStatus(props.task.taskID, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New, props.tdlID))
+        props.changeTaskStatus(props.tdlID, props.task.id, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New)
+        // dispatch(changeTaskStatus(props.task.taskID, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New, props.tdlID))
     }, [props.task.id, props.tdlID]);
     const onChangeTitleHandler = useCallback((newValue: string) => {
         props.changeTaskTitle(props.tdlID, props.task.id, newValue)
-       // dispatch(changeTaskTitle(props.task.taskID, newValue, props.tdlID, ))
+        // dispatch(changeTaskTitle(props.task.taskID, newValue, props.tdlID, ))
     }, [props.tdlID, props.task.id]);
     const OnRemoveHandler = useCallback(() => {
-      //  dispatch(removeTaskAC(props.task.taskID, props.tdlID))
+        //  dispatch(removeTaskAC(props.task.taskID, props.tdlID))
         props.removeTask(props.task.id, props.tdlID)
     }, [props.task.id, props.tdlID]);
 
