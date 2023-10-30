@@ -22,6 +22,7 @@ type UpdateDomainTaskModelType = {
     startDate?: string
     deadline?: string
 }
+type ThunkDispatchType = Dispatch<ActionsTypes | SetStatusACType | SetErrorACType>
 const initialState: TasksStateType = {
     /*[todoListID1]: [
         {taskID: v1(), title: 'HTML', isDone: true},
@@ -109,14 +110,16 @@ export const fetchTasksTC = (todolistID: string) => {
             })
     }
 }
-export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch<ActionsTypes>) => {
+export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: ThunkDispatchType) => {
+    dispatch(setStatusAC('loading'))
     todolistsAPI.deleteTask(taskId, todolistId)
         .then((res) => {
             dispatch(removeTaskAC(todolistId, taskId))
+            dispatch(setStatusAC('succeeded'))
         })
 }
 
-export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch<ActionsTypes | SetErrorACType | SetStatusACType>) => {
+export const addTaskTC = (title: string, todolistId: string) => (dispatch: ThunkDispatchType) => {
     dispatch(setStatusAC('loading'))
     todolistsAPI.createTask(todolistId, title)
         .then(res => {
@@ -136,7 +139,7 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
 }
 
 export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskModelType,) =>
-    (dispatch: Dispatch<ActionsTypes>, getState: () => AppRootStateType) => {
+    (dispatch: ThunkDispatchType, getState: () => AppRootStateType) => {
         const state = getState()
         const task = state.tasks[todolistId].find(t => t.id === taskId)
         if (!task || undefined) {
@@ -152,8 +155,10 @@ export const updateTaskTC = (todolistId: string, taskId: string, domainModel: Up
             deadline: task.deadline,
             ...domainModel
         }
+        dispatch(setStatusAC('loading'))
         todolistsAPI.updateTask(todolistId, taskId, apimodel)
             .then(res => {
                 dispatch(updateTaskAC(taskId, apimodel, todolistId))
+                dispatch(setStatusAC('succeeded'))
             })
     }
