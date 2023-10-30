@@ -1,5 +1,6 @@
 import {todolistsAPI, TodolistType} from "../api/todolists-api";
 import {Dispatch} from "redux";
+import {RequestStatusType, SetErrorACType, setStatusAC, SetStatusACType} from "../app/app-reducer";
 
 export type AddTodoListActionType = ReturnType<typeof addTodolistAC>
 export type SetTodoListsType = ReturnType<typeof setTodolistAC>
@@ -17,8 +18,9 @@ export type FilterValuesType = 'All' | 'Completed' | 'Active';
 
 export type TodolistDomainType = TodolistType & {
     filter: FilterValuesType
+    entityStatus: RequestStatusType
 }
-
+type ThunkDispatchType = Dispatch<ActionsTypes | SetStatusACType | SetErrorACType>
 const initialState: Array<TodolistDomainType> = [
     // {id: todoListID1, title: 'What to learn', filter: 'All'},
     // {id: todoListID2, title: 'What to buy', filter: 'All'}
@@ -27,11 +29,11 @@ const initialState: Array<TodolistDomainType> = [
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsTypes): Array<TodolistDomainType> => {
     switch (action.type) {
         case 'SET-TODOLIST':
-            return action.todolists.map(el => ({...el, filter: 'All'}))
+            return action.todolists.map(el => ({...el, filter: 'All', entityStatus: 'idle'}))
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            return [{...action.todolist, filter: 'All'}, ...state]
+            return [{...action.todolist, filter: 'All', entityStatus: 'idle'}, ...state]
         case 'CHANGE-TODOLIST-TITLE':
             return state.map(el => el.id === action.id ? {...el, title: action.title} : el)
             // const todolist = state.find(tl => tl.id === action.id);
@@ -62,35 +64,43 @@ export const changeTodolistFilterAC = (id: string, filter: FilterValuesType) =>
 export const setTodolistAC = (todolists: TodolistType[]) => ({type: 'SET-TODOLIST', todolists} as const)
 //============ThunkCreator
 export const getTodolistTC = () => {
-    return (dispatch: Dispatch<ActionsTypes>) => {
+    return (dispatch: ThunkDispatchType) => {
+        dispatch(setStatusAC('loading'))
         todolistsAPI.getTodolists()
             .then((res) => {
                 dispatch(setTodolistAC(res.data))
+                setStatusAC('succeeded')
             })
     }
 }
 export const removeTodolistTC = (todolistID: string) => {
-    return (dispatch: Dispatch<ActionsTypes>) => {
+    return (dispatch: ThunkDispatchType) => {
+        dispatch(setStatusAC('loading'))
         todolistsAPI.deleteTodolist(todolistID)
             .then((res) => {
                 dispatch(removeTodolistAC(todolistID))
+                dispatch(setStatusAC('succeeded'))
             })
     }
 }
 export const addTodolistTC = (title: string) => {
-
-    return (dispatch: Dispatch<ActionsTypes>) => {
+    return (dispatch: ThunkDispatchType) => {
+        dispatch(setStatusAC('loading'))
         todolistsAPI.createTodolist(title)
             .then((res) => {
                 dispatch(addTodolistAC(res.data.data.item))
+                dispatch(setStatusAC('succeeded'))
             })
     }
 }
 export const changeTodolistTitleTC = (id: string, title: string) => {
-    return (dispatch: Dispatch<ActionsTypes>) => {
+    return (dispatch: ThunkDispatchType) => {
+        dispatch(setStatusAC('loading'))
         todolistsAPI.updateTodolist(id, title)
             .then((res) => {
                 dispatch(changeTodolistTitleAC(id, title))
+                dispatch(setStatusAC('succeeded'))
             })
     }
 }
+
