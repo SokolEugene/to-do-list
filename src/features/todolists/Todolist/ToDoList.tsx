@@ -6,14 +6,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {useDispatch} from "react-redux";
 import {Task} from "./Task/Task";
 import {TaskStatuses, TaskType} from "../../../api/todolists-api";
-import {FilterValuesType} from "../../../state/todolists-reducer";
+import {FilterValuesType, TodolistDomainType} from "../../../state/todolists-reducer";
 import {fetchTasksTC} from "../../../state/tasks-reducer";
 
 
 type PropsToDoListType = {
+    todolist: TodolistDomainType
     removeTDL: (todolistID: string) => void
-    id: string
-    title: string
     tasks: Array<TaskType>
     changeFilter: (todolistId: string, value: FilterValuesType) => void
     addTask: (title: string, todolistId: string) => void
@@ -21,7 +20,7 @@ type PropsToDoListType = {
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
     removeTask: (taskId: string, todolistId: string) => void
     ChangeToDoListTitle: (id: string, newTitle: string) => void
-    filter: FilterValuesType
+
 }
 
 export const ToDoList = React.memo((props: PropsToDoListType) => {
@@ -29,44 +28,45 @@ export const ToDoList = React.memo((props: PropsToDoListType) => {
     const dispatch = useDispatch();
     useEffect(() => {
         // @ts-ignore
-        dispatch(fetchTasksTC(props.id))
+        dispatch(fetchTasksTC(props.todolist.id))
     }, []);
-    const removeTDL = useCallback(() => props.removeTDL(props.id), [props.removeTDL, props.id, dispatch]);
-    //const addTask = useCallback((title: string) => dispatch(addTaskAC(props.tdlID, title)), [props.tdlID, dispatch]);
-    //const addTask = useCallback((title: string) => dispatch(addTaskAC(title)), [props.tdlID, dispatch]);
-    const ChangeToDoListTitle = useCallback((newTitle: string) => props.ChangeToDoListTitle(props.id, newTitle), [props.ChangeToDoListTitle, props.id, dispatch]);
+    const removeTDL = useCallback(() => props.removeTDL(props.todolist.id), [props.removeTDL, props.todolist.id, dispatch]);
+    const ChangeToDoListTitle = useCallback((newTitle: string) => props.ChangeToDoListTitle(props.todolist.id, newTitle), [props.ChangeToDoListTitle, props.todolist.id, dispatch]);
     const addTask = useCallback((title: string) => {
-        props.addTask(title, props.id)
-    }, [props.addTask, props.id])
+        props.addTask(title, props.todolist.id)
+    }, [props.addTask, props.todolist.id])
 
-    const onAllClickHandler = useCallback(() => props.changeFilter(props.id, 'All'), [props.id, props.changeFilter]);
-    const onActiveClickHandler = useCallback(() => props.changeFilter(props.id, 'Active' ), [props.id, props.changeFilter, ]);
-    const onCompletedClickHandler = useCallback(() => props.changeFilter(props.id, 'Completed'), [props.id, props.changeFilter, ]);
+    const onAllClickHandler = useCallback(() => props.changeFilter(props.todolist.id, 'All'), [props.todolist.id, props.changeFilter]);
+    const onActiveClickHandler = useCallback(() => props.changeFilter(props.todolist.id, 'Active' ), [props.todolist.id, props.changeFilter, ]);
+    const onCompletedClickHandler = useCallback(() => props.changeFilter(props.todolist.id, 'Completed'), [props.todolist.id, props.changeFilter, ]);
 
 
     let tasksForToDoList = props.tasks
-    console.log(props.tasks)
-    if (props.filter === 'Active') {
+    if (props.todolist.filter === 'Active') {
         tasksForToDoList = props.tasks.filter(t => t.status === TaskStatuses.New)
     }
-    if (props.filter === 'Completed') {
+    if (props.todolist.filter === 'Completed') {
         tasksForToDoList = props.tasks.filter(t => t.status === TaskStatuses.Completed)
     }
     return (
         <div>
             <h3>
-                <EditableSpan title={props.title} onChange={ChangeToDoListTitle}/>
-                <IconButton onClick={removeTDL} size={'large'} aria-label="delete">
+                <EditableSpan title={props.todolist.title} onChange={ChangeToDoListTitle}/>
+                <IconButton onClick={removeTDL}
+                            size={'large'}
+                            aria-label="delete"
+                            disabled={props.todolist.entityStatus === 'loading'}>
                     <DeleteIcon/>
                 </IconButton>
             </h3>
-            <AddItemForm addItem={addTask}/>
+            <AddItemForm addItem={addTask}
+                         disabled={props.todolist.entityStatus === 'loading'}/>
             <List>
                 {tasksForToDoList.map(el => {
                     return (
                         <Task
                             task={el}
-                            tdlID={props.id}
+                            tdlID={props.todolist.id}
                             key={el.id}
                             removeTask={props.removeTask}
                             changeTaskTitle={props.changeTaskTitle}
@@ -78,19 +78,19 @@ export const ToDoList = React.memo((props: PropsToDoListType) => {
             <div>
                 <Button
                     sx={{mr: '2px'}}
-                    variant={props.filter === 'All' ? 'contained' : 'outlined'}
+                    variant={props.todolist.filter === 'All' ? 'contained' : 'outlined'}
                     color={'primary'}
                     size={'small'}
                     onClick={onAllClickHandler}>All
                 </Button>
                 <Button sx={{mr: '2px'}}
-                        variant={props.filter === 'Active' ? 'contained' : 'outlined'}
+                        variant={props.todolist.filter === 'Active' ? 'contained' : 'outlined'}
                         color={'primary'}
                         size={'small'}
                         onClick={onActiveClickHandler}>Active
                 </Button>
                 <Button sx={{mr: '2px'}}
-                        variant={props.filter === 'Completed' ? 'contained' : 'outlined'}
+                        variant={props.todolist.filter === 'Completed' ? 'contained' : 'outlined'}
                         color={'primary'}
                         size={'small'}
                         onClick={onCompletedClickHandler}>Completed

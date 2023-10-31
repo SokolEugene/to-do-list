@@ -61,6 +61,7 @@ export const ToDoListsList = () => {
     }, []);
     const changeFilter = useCallback((todolistID: string, value: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(todolistID, value))
+        debugger
     }, [])
     return (
         <>
@@ -73,14 +74,11 @@ export const ToDoListsList = () => {
                     let allTodolistTasks = tasks[el.id];
 
                     return (
-                        <Grid item>
+                        <Grid item key={el.id}>
                             <Paper style={{padding: "10px"}}>
-                                <ToDoList key={el.id}
-                                          id={el.id}
-                                          title={el.title}
+                                <ToDoList todolist={el}
                                           tasks={allTodolistTasks}
                                           changeFilter={changeFilter}
-                                          filter={el.filter}
                                           removeTDL={removeTDL}
                                           ChangeToDoListTitle={ChangeToDoListTitle}
                                           addTask={addTask}

@@ -4,6 +4,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 
 type AddItemFormProps = {
     addItem: (title: string) => void
+    disabled?: boolean
 }
 
 export const AddItemForm = React.memo((props: AddItemFormProps) => {
@@ -44,12 +45,14 @@ export const AddItemForm = React.memo((props: AddItemFormProps) => {
                 value={newTaskTitle}
                 onChange={onChangeHandler}
                 onKeyDown={onKeyDownHandler}
+                disabled={props.disabled}
                 // className={error}
             />
             {/*<button onClick={addTask}>+</button>*/}
             <IconButton onClick={addTask}
-                color={'primary'}>
-<AddTaskIcon/>
+                        color={'primary'}
+                        disabled={props.disabled}>
+                <AddTaskIcon/>
             </IconButton>
         </div>
     )
