@@ -61,7 +61,6 @@ export const ToDoListsList = () => {
     }, []);
     const changeFilter = useCallback((todolistID: string, value: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(todolistID, value))
-        debugger
     }, [])
     return (
         <>
