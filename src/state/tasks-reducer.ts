@@ -9,7 +9,7 @@ import {Dispatch} from "redux";
 import {AppRootStateType} from "../app/store";
 import {AddTodoListActionType, RemoveTodoListActionType, SetTodoListsType} from "./todolists-reducer";
 import {TasksStateType} from "../features/todolists/ToDoListsList";
-import {SetApErrorACType, setAppStatusAC, SetAppStatusACType} from "../app/app-reducer";
+import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
 type ActionsTypes =
@@ -29,7 +29,7 @@ type UpdateDomainTaskModelType = {
     startDate?: string
     deadline?: string
 }
-export type ThunkDispatchType = Dispatch<ActionsTypes | SetAppStatusACType | SetApErrorACType>
+export type ThunkDispatchType = Dispatch<ActionsTypes | SetAppStatusACType | SetAppErrorACType>
 const initialState: TasksStateType = {
     /*[todoListID1]: [
         {taskID: v1(), title: 'HTML', isDone: true},

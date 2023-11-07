@@ -3,6 +3,7 @@ import {todolistsReducer} from "../state/todolists-reducer";
 import {tasksReducer} from "../state/tasks-reducer";
 import thunk from "redux-thunk";
 import {appReducer} from "./app-reducer";
+import {loginReducer} from "../state/login-reducer";
 // import {TodoListType, TasksStateType} from "../AppWithRedux";
 
 /*type AppRootState = {
@@ -15,7 +16,8 @@ import {appReducer} from "./app-reducer";
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    login: loginReducer
 })
 // непосредственно создаём store
 export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

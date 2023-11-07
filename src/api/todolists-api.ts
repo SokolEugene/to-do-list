@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
+
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     withCredentials: true,
@@ -7,7 +8,24 @@ const instance = axios.create({
         'API-KEY': 'a3cb7ea3-8b90-434f-8381-9518c975c1eb'
     }
 })
+export type LoginDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+export const authAPI = {
+    login(data: LoginDataType) {
+        return instance.post<ResponseType<{ userID?: number }>>('auth/login', data);
+    },
+    me() {
+        return instance.get<ResponseType<{id: number; email: string; login: string}>>('auth/me')
+    },
+    logOut() {
+        return instance.delete<ResponseType<{id: number; email: string; login: string}>>('auth/login')
+    }
 
+}
 //api
 export const todolistsAPI = {
     getTodolists() {

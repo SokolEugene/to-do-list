@@ -1,6 +1,6 @@
 import {todolistsAPI, TodolistType} from "../api/todolists-api";
 import {Dispatch} from "redux";
-import {RequestStatusType, SetApErrorACType, setAppStatusAC, SetAppStatusACType} from "../app/app-reducer";
+import {RequestStatusType, SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../app/app-reducer";
 import {handleServerNetworkError} from "../utils/error-utils";
 
 export type AddTodoListActionType = ReturnType<typeof addTodolistAC>
@@ -22,7 +22,7 @@ export type TodolistDomainType = TodolistType & {
     filter: FilterValuesType
     entityStatus: RequestStatusType
 }
-type ThunkDispatchType = Dispatch<ActionsTypes | SetAppStatusACType | SetApErrorACType  | ChangeTodolistEntityStatusType>
+type ThunkDispatchType = Dispatch<ActionsTypes | SetAppStatusACType | SetAppErrorACType  | ChangeTodolistEntityStatusType>
 const initialState: Array<TodolistDomainType> = [
     // {id: todoListID1, title: 'What to learn', filter: 'All'},
     // {id: todoListID2, title: 'What to buy', filter: 'All'}

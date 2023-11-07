@@ -15,6 +15,7 @@ import {addTaskTC, removeTaskTC, updateTaskTC} from "../../state/tasks-reducer";
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {ToDoList} from "./Todolist/ToDoList";
+import {Navigate} from "react-router-dom";
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
@@ -23,7 +24,13 @@ export const ToDoListsList = () => {
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggetIn)
+
+
     useEffect(() => {
+        if (!isLoggedIn){
+            return
+        }
         // @ts-ignore
         dispatch(getTodolistTC());
     }, []);
@@ -62,6 +69,11 @@ export const ToDoListsList = () => {
     const changeFilter = useCallback((todolistID: string, value: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(todolistID, value))
     }, [])
+
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
+
     return (
         <>
             <Grid container style={{padding: "20px"}}>
