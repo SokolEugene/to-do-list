@@ -1,16 +1,16 @@
-import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
+import {combineReducers} from "redux";
 import {todolistsReducer} from "../state/todolists-reducer";
 import {tasksReducer} from "../state/tasks-reducer";
 import thunk from "redux-thunk";
 import {appReducer} from "./app-reducer";
 import {loginReducer} from "../state/login-reducer";
+import {configureStore} from "@reduxjs/toolkit";
 // import {TodoListType, TasksStateType} from "../AppWithRedux";
 
 /*type AppRootState = {
     todolist: TodoListType[]
     tasks: TasksStateType
 }*/
-
 
 
 const rootReducer = combineReducers({
@@ -20,7 +20,13 @@ const rootReducer = combineReducers({
     login: loginReducer
 })
 // непосредственно создаём store
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
+// export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
+
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)})
+
+
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
 

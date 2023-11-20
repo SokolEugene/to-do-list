@@ -15,7 +15,7 @@ import {Navigate} from "react-router-dom";
 
 export const Login = () => {
     const dispatch = useDispatch()
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggetIn)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
 
     const formik = useFormik({
         validate: (values) => {

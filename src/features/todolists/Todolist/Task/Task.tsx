@@ -10,7 +10,7 @@ export type PropsTasksType = {
     tdlID: string
     changeTaskStatus: (todolistId: string, taskId: string, status: TaskStatuses) => void
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
-    removeTask: (taskId: string, todolistId: string) => void
+    removeTask: (todolistId: string, taskId: string) => void
 }
 /*export type PropsTasksType = {
     taskID: string
@@ -38,7 +38,8 @@ export const Task = React.memo((props: PropsTasksType) => {
     }, [props.tdlID, props.task.id]);
     const OnRemoveHandler = useCallback(() => {
         //  dispatch(removeTaskAC(props.task.taskID, props.tdlID))
-        props.removeTask(props.task.id, props.tdlID)
+        // debugger
+        props.removeTask(props.tdlID, props.task.id)
     }, [props.task.id, props.tdlID]);
 
     /*let tasksForToDoList = tasks;

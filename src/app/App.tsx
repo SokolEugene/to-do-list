@@ -21,7 +21,7 @@ function App() {
 
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.initialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggetIn)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
     const dispatch = useDispatch()
     useEffect(() => {
         // @ts-ignore

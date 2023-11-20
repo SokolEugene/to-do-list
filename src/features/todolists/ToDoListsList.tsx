@@ -24,7 +24,7 @@ export const ToDoListsList = () => {
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggetIn)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
 
 
     useEffect(() => {
@@ -54,7 +54,8 @@ export const ToDoListsList = () => {
         // @ts-ignore
         dispatch(addTaskTC(title, todolistId))
     }, []);
-    const removeTask = useCallback(function (id: string, todolistId: string) {
+    const removeTask = useCallback(function (todolistId: string, id: string) {
+        //debugger
         // @ts-ignore
         dispatch(removeTaskTC(todolistId, id))
     }, []);
@@ -66,8 +67,8 @@ export const ToDoListsList = () => {
         // @ts-ignore
         dispatch(updateTaskTC(todolistId, taskId, {status}))
     }, []);
-    const changeFilter = useCallback((todolistID: string, value: FilterValuesType) => {
-        dispatch(changeTodolistFilterAC(todolistID, value))
+    const changeFilter = useCallback((todolistID: string, filter: FilterValuesType) => {
+        dispatch(changeTodolistFilterAC({id: todolistID, filter}))
     }, [])
 
     if (!isLoggedIn) {

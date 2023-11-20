@@ -14,11 +14,11 @@ type PropsToDoListType = {
     todolist: TodolistDomainType
     removeTDL: (todolistID: string) => void
     tasks: Array<TaskType>
-    changeFilter: (todolistId: string, value: FilterValuesType) => void
+    changeFilter: (todolistId: string, filter: FilterValuesType) => void
     addTask: (title: string, todolistId: string) => void
     changeTaskStatus: (todolistId: string, taskId: string, status: TaskStatuses) => void
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
-    removeTask: (taskId: string, todolistId: string) => void
+    removeTask: (todolistId: string, taskId: string) => void
     ChangeToDoListTitle: (id: string, newTitle: string) => void
 
 }
