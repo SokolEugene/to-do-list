@@ -38,7 +38,7 @@ export const Task = React.memo((props: PropsTasksType) => {
     }, [props.tdlID, props.task.id]);
     const OnRemoveHandler = useCallback(() => {
         //  dispatch(removeTaskAC(props.task.taskID, props.tdlID))
-        // debugger
+        debugger
         props.removeTask(props.tdlID, props.task.id)
     }, [props.task.id, props.tdlID]);
 

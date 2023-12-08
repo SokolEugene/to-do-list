@@ -54,10 +54,9 @@ export const ToDoListsList = () => {
         // @ts-ignore
         dispatch(addTaskTC(title, todolistId))
     }, []);
-    const removeTask = useCallback(function (todolistId: string, id: string) {
-        //debugger
+    const removeTask = useCallback(function (todolistId: string, taskId: string) {
         // @ts-ignore
-        dispatch(removeTaskTC(todolistId, id))
+        dispatch(removeTaskTC({todolistId: todolistId, taskId: taskId}))
     }, []);
     const changeTaskTitle = useCallback(function (todolistId: string, taskId: string, title: string) {
         // @ts-ignore
